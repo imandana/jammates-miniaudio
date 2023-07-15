@@ -26,13 +26,15 @@
     #include <fcntl.h>
 #endif
 
-#define NUM_OF_MUSIC	15
+#define NUM_OF_MUSIC	11
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved);
 
 int isClosed = 0;
 //int pauseMusic = 0;
 int isPlaying = 0;
+int setPitchReady = 0;
+//int pitchValue = 0;
 
 
 /// Using this for dynamic music load, but the MAX is fixed size
@@ -56,6 +58,8 @@ Music pianoAudio;
 void InitDeviceMiniaudio();
 void ExecutePlayer();
 
+void SetPitchAll( float );
+
 void StartPlayer();
 void StopPlayer();
 void PausePlayer();
@@ -67,10 +71,13 @@ JNIEXPORT void JNICALL
 Java_com_jenggotmalam_MiniAudioPlayer_AddMusicStream(JNIEnv *env, jobject obj, jstring pathName) ;
 
 JNIEXPORT void JNICALL
+Java_com_jenggotmalam_MiniAudioPlayer_RemoveMusicStream(JNIEnv *env, jobject obj, jint pos) ;
+
+JNIEXPORT void JNICALL
 Java_com_jenggotmalam_MiniAudioPlayer_SetVolumeForMusic(JNIEnv *env, jobject obj, jint pos, jfloat vol) ;
 
 
-
+////////////////
 JNIEXPORT void JNICALL
 Java_com_jenggotmalam_MiniAudioPlayer_InitAssetManagerMini(JNIEnv *env, jobject obj, jobject assetManager, jstring pathObj) ;
 
@@ -86,6 +93,8 @@ Java_com_jenggotmalam_MiniAudioPlayer_InitMiniaudio(JNIEnv *env, jobject instanc
 JNIEXPORT void JNICALL
 Java_com_jenggotmalam_MiniAudioPlayer_PlayMiniaudio(JNIEnv *env, jobject instance);
 
+JNIEXPORT void JNICALL
+Java_com_jenggotmalam_MiniAudioPlayer_SetPitchAllMusic(JNIEnv *env, jobject instance, jfloat pitch);
 
 
 JNIEXPORT void JNICALL
