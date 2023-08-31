@@ -64,22 +64,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
     for (String track in _audioTracks) {
       downloadAndSaveFile(
-        'https://github.com/naonvl/vespa-configurator-playcanvas/blob/main/' +
+        'https://raw.githubusercontent.com/naonvl/vespa%2Dconfigurator%2Dplaycanvas/main/' +
             track +
             '.mp3',
         track + '.mp3',
       ).then((path) {
         _audioPaths.add(path);
+        if (!isInitPlayerInvoked) {
+          _methodChannel.invokeMethod("initPlayer", {"audioTracks": _audioTracks});
+          isInitPlayerInvoked = true; // Set the flag to true after invoking initPlayer
+        }
       });
 
       _soloStates[track] = false;
       _tempTrackVolumes[track] = 1.0;
       _trackVolumes[track] = 1.0;
 
-      if (!isInitPlayerInvoked) {
-        _methodChannel.invokeMethod("initPlayer", {"audioTracks": _audioTracks});
-        isInitPlayerInvoked = true; // Set the flag to true after invoking initPlayer
-      }
+
     }
   }
   // /STORAGE

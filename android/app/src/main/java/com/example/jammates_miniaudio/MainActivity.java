@@ -58,6 +58,7 @@ public class MainActivity extends FlutterActivity {
                     List<String> audioTracks = (List<String>) call.argument("audioTracks");
                     for (String track : audioTracks) {
                         miniAudioPlayer.AddMusicStreamFromStorage("/storage/emulated/0/Android/data/com.example.jammates_miniaudio/files/" + track + ".mp3");
+//                        miniAudioPlayer.AddMusicStreamFromStorage("audio/" + track + ".mp3");
 //                        miniAudioPlayer.AddMusicStreamFromStorage("/data/user/0/com.example.jammates_miniaudio/files/" + track + ".mp3");
                     }
 
