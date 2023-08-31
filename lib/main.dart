@@ -46,10 +46,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void _togglePlay() {
     if (!_isPlaying) {
       _methodChannel
-          .invokeMethod("playSound", {"filePath": _audioPaths.toString()});
+          .invokeMethod("playSound");
     } else {
       _methodChannel
-          .invokeMethod("stopSound", {"filePath": _audioPaths.toString()});
+          .invokeMethod("stopSound");
     }
     setState(() {
       _isPlaying = !_isPlaying;
@@ -59,8 +59,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _methodChannel
-        .invokeMethod("initPlayer", {"audioTracks": _audioTracks.toString()});
     // Initialize solo states and track volumes based on _audioTracks
     for (String track in _audioTracks) {
       downloadAndSaveFile(
@@ -75,6 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
       _tempTrackVolumes[track] = 1.0;
       _trackVolumes[track] = 1.0;
     }
+    _methodChannel
+        .invokeMethod("initPlayer", {"audioTracks": _audioTracks});
   }
 
   Future<String> downloadAndSaveFile(String url, String filename) async {

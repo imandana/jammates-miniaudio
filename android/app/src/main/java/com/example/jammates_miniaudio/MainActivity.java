@@ -1,8 +1,8 @@
-package com.example.jammates;
+package com.example.jammates_miniaudio;
 
 import android.os.Bundle;
 import android.util.Log;
-import java.util.List;
+
 import androidx.annotation.NonNull;
 
 import io.flutter.embedding.android.FlutterActivity;
@@ -22,8 +22,22 @@ public class MainActivity extends FlutterActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        miniAudioPlayer = new MiniAudioPlayer(this);
-        miniAudioPlayer.StartAudioThread();
+		/// Init the Miniaudio player
+		miniAudioPlayer = new MiniAudioPlayer( this );
+		
+		// Start audio thread
+		miniAudioPlayer.StartAudioThread();
+
+		/// Add music together
+		miniAudioPlayer.AddMusicStreamToPlay("audio/bass.mp3");
+		miniAudioPlayer.AddMusicStreamToPlay("audio/drum.mp3");
+		miniAudioPlayer.AddMusicStreamToPlay("audio/piano.mp3");
+		
+		
+		/// Set Volume
+		miniAudioPlayer.SetMusicVolumeOf("audio/bass.mp3", 1.0f);
+		miniAudioPlayer.SetMusicVolumeOf("audio/drum.mp3", 0.5f);
+		miniAudioPlayer.SetMusicVolumeOf("audio/piano.mp3", 0.2f);
     }
 	
     @Override
@@ -35,72 +49,38 @@ public class MainActivity extends FlutterActivity {
         methodChannel.setMethodCallHandler((call, result) -> {
             switch (call.method) {
                 case "initPlayer":
-                    // Initialize your player here based on audio tracks received from Flutter
-                    List<String> audioTracks = call.argument("audioTracks");
-                    for (String track : audioTracks) {
-                        miniAudioPlayer.AddMusicStreamToPlay("audio/" + track + ".mp3");
+                    Log.d("TAG", "Play sound: INITPLAYER");
 
-                    }
-                    Log.d("TAG", "initPlayer: STARTED");
-                    break;                
-				case "addMp3FromStorage":
-                    // Initialize your player here based on audio tracks received from Flutter
-                    String audioTrack = call.argument("audioTrack");
-                    miniAudioPlayer.AddMusicStreamToPlayFromStorage(audioTrack);
-					
-                    Log.d("TAG", "addMp3FromStorage: STARTED");
                     break;
                 case "playSound":
-                    Log.d("TAG", "Play sound: " + call.argument("filePath"));
+                    Log.d("TAG", "Play sound: " + call.argument("text"));
 					
 					miniAudioPlayer.PlayAllAudio();
 					
                     break;
                 case "stopSound":
-                    Log.d("TAG", "Stop sound: " + call.argument("filePath"));
+                    Log.d("TAG", "Stop sound: " + call.argument("text"));
 					
-					miniAudioPlayer.StopAllAudio();
+					// Not implemented yet
 					
                     break;
-				case "pauseSound":
-                    Log.d("TAG", "Stop sound: " + call.argument("text"));
-					
-					miniAudioPlayer.PauseAllAudio();
-					
-                break;
-				case "resumeSound":
-                    Log.d("TAG", "Stop sound: " + call.argument("text"));
-					
-					miniAudioPlayer.ResumeAllAudio();
-					
-                break;
                 case "updateDrumVolume":
-                    float drumVolume = call.argument("volume");
+                    float drumVolume = ((Number) call.argument("volume")).floatValue();
                     Log.d("TAG", "Drum volume updated: " + drumVolume);
-					
-					miniAudioPlayer.SetMusicVolumeOf("audio/drum.mp3", drumVolume);
+                    miniAudioPlayer.SetMusicVolumeOf("audio/drum.mp3", drumVolume);
                     break;
                 case "updateBassVolume":
-                    float bassVolume = call.argument("volume");
+                    float bassVolume = ((Number) call.argument("volume")).floatValue();
                     Log.d("TAG", "Bass volume updated: " + bassVolume);
-					
-					miniAudioPlayer.SetMusicVolumeOf("audio/bass.mp3", bassVolume);
+                    miniAudioPlayer.SetMusicVolumeOf("audio/bass.mp3", bassVolume);
                     break;
                 case "updatePianoVolume":
-                    float pianoVolume = call.argument("volume");
+                    float pianoVolume = ((Number) call.argument("volume")).floatValue();
                     Log.d("TAG", "Piano volume updated: " + pianoVolume);
-					
-					miniAudioPlayer.SetMusicVolumeOf("audio/piano.mp3", pianoVolume);
+                    miniAudioPlayer.SetMusicVolumeOf("audio/piano.mp3", pianoVolume);
                     break;
-					
-				case "setPitch":
-                    float pitch = call.argument("pitch");
-                    Log.d("TAG", "Pitch volume updated: " + pitch);
-					
-					miniAudioPlayer.SetPitchAllAudio( pitch );
-                    break;
-					
                 default:
+
                     Log.e("TAG", "ERROR");
                     break;
             }

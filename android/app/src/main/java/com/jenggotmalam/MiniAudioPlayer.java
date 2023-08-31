@@ -1,6 +1,6 @@
 package com.jenggotmalam;
 
-import java.util.*;  
+import java.util.*;
 
 import android.app.Activity;
 import android.content.res.AssetManager;
@@ -10,44 +10,44 @@ public class MiniAudioPlayer {
 
 	static { System.loadLibrary("androidAPI"); }
 	private Map<String, Integer> musicList;
-	
+
 	public Thread audioThread;
 	private static final String TAG = "MiniAudioJava";
 
 	/// Temporary, cannot be decreased dynamically
 	private int indexMusic = 0;
 	private ArrayList<Integer> reservedPos;
-	
-    public MiniAudioPlayer(Activity activity) {
+
+	public MiniAudioPlayer(Activity activity) {
 
 		Log.v(TAG,  activity.getFilesDir().getPath() );
 		InitAssetManagerMini(activity.getResources().getAssets() , activity.getFilesDir().getPath() );
-		
+
 		Log.v(TAG, "InitMiniaudio");
 		InitMiniaudio();
-		
+
 		musicList = new HashMap<String, Integer>();
 		reservedPos = new ArrayList<Integer>();
-		
-		
+
+
 		audioThread = new Thread(new Runnable() {
 
-						@Override
-						public void run() {
-							
-							Log.v(TAG, "In Thread StartThreadMiniaudio();");
-							StartThreadMiniaudio();
-						 }
-					 });
-    }
+			@Override
+			public void run() {
 
-	public void AddMusicStreamToPlay(String pathName) // 
+				Log.v(TAG, "In Thread StartThreadMiniaudio();");
+				StartThreadMiniaudio();
+			}
+		});
+	}
+
+	public void AddMusicStreamToPlay(String pathName) //
 	{
 		if( indexMusic >= 12 ) // For now harddoced
 			return;
-			
+
 		Log.v(TAG, "AddMusicStreamToPlay(String pathName)");
-		
+
 		if(reservedPos.size() > 0)
 		{
 			musicList.put(pathName, reservedPos.get( 0 ) );
@@ -58,17 +58,17 @@ public class MiniAudioPlayer {
 			musicList.put(pathName, indexMusic);
 		}
 		indexMusic++;
-		
+
 		Log.v(TAG, "AddMusicStream( pathName );");
 		AddMusicStream( pathName );
 
 	}
-		
-	public void AddMusicStreamToPlayFromStorage(String pathName) // 
+
+	public void AddMusicStreamToPlayFromStorage(String pathName) //
 	{
 		if( indexMusic >= 12 ) // For now harddoced
 			return;
-			
+
 		Log.v(TAG, "AddMusicStreamToPlayFromStorage(String pathName)");
 		if(reservedPos.size() > 0)
 		{
@@ -80,32 +80,32 @@ public class MiniAudioPlayer {
 			musicList.put(pathName, indexMusic);
 		}
 		indexMusic++;
-		
+
 		Log.v(TAG, "AddMusicStreamFromStorage( pathName );");
 		AddMusicStreamFromStorage( pathName );
 
 	}
-	
-	public void RemoveMusicStreamFromPlay(String pathName) // 
+
+	public void RemoveMusicStreamFromPlay(String pathName) //
 	{
 		int pos = musicList.get( pathName );
 		musicList.remove( pos );
-		
+
 		reservedPos.add( pos );
-		
+
 		indexMusic--;
-		
+
 		Log.v(TAG, "RemoveMusicStream( pos );");
 		RemoveMusicStream( pos );
 	}
-	
+
 	public void SetMusicVolumeOf(String pathName, float vol)
 	{
 		int pos = musicList.get( pathName );
-		
+
 		SetVolumeForMusic(pos, vol);
 	}
-	
+
 	public void StartAudioThread()
 	{
 		if( !audioThread.isAlive() )
@@ -114,41 +114,41 @@ public class MiniAudioPlayer {
 			return;
 		}
 	}
-	
+
 	public void SetPitchAllAudio(float pitch)
 	{
-		SetPitchAllMusic( pitch );	
+		SetPitchAllMusic( pitch );
 	}
-	
+
 	public void StopAllAudio()
 	{
-		StopMiniaudio();	
+		StopMiniaudio();
 	}
-			
+
 	public void PauseAllAudio()
 	{
-		PauseMiniaudio();	
+		PauseMiniaudio();
 	}
-					
+
 	public void ResumeAllAudio()
 	{
-		ResumeMiniaudio();	
+		ResumeMiniaudio();
 	}
-		
+
 	public void PlayAllAudio()
 	{
 		// restart playing
-		PlayMiniaudio();	
+		PlayMiniaudio();
 	}
-	
-    public void onDestroy() {
-		
+
+	public void onDestroy() {
+
 		SetIsClosed( 1 );
 		CleanResource();
-		
+
 	}
-	
-	
+
+
 	private native void InitAssetManagerMini(AssetManager mgr, String path);
 
 	public native void SetIsClosed(int value);
@@ -158,17 +158,17 @@ public class MiniAudioPlayer {
 	public native void CleanResource();
 	public native void InitMiniaudio();
 	public native void PlayMiniaudio();
-	
+
 	public native void SetPitchAllMusic(float pitch);
-	
+
 	public native void StopMiniaudio();
 	public native void PauseMiniaudio();
 	public native void ResumeMiniaudio();
-	
+
 	public native void SetVolumeForMusic(int pos, float vol);
-	
+
 	public native void StartThreadMiniaudio();
 
-	
+
 }
 
