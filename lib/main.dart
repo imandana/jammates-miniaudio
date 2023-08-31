@@ -82,8 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     }
   }
-
-
+  // /STORAGE
   Future<String> downloadAndSaveFile(String url, String filename) async {
     Directory? dir = await getExternalStorageDirectory();
     String path = '${dir?.path}/$filename';
@@ -105,6 +104,28 @@ class _MyHomePageState extends State<MyHomePage> {
       throw Exception('Failed to download file');
     }
   }
+  // /DATA/
+  // Future<String> downloadAndSaveFile(String url, String filename) async {
+  //   Directory dir = await getApplicationSupportDirectory();
+  //   String path = '${dir.path}/$filename';
+  //   File file = File(path);
+  //
+  //   if (await file.exists()) {
+  //     print('File already exists at $path');
+  //     return path;
+  //   }
+  //
+  //   var response = await http.get(Uri.parse(url));
+  //
+  //   if (response.statusCode == 200) {
+  //     var bytes = response.bodyBytes;
+  //     await file.writeAsBytes(bytes);
+  //     print('File saved at $path');
+  //     return path;
+  //   } else {
+  //     throw Exception('Failed to download file');
+  //   }
+  // }
 
   @override
   void dispose() {
