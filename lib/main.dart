@@ -55,31 +55,38 @@ class _MyHomePageState extends State<MyHomePage> {
       _isPlaying = !_isPlaying;
     });
   }
+  bool isInitPlayerInvoked = false; // Flag to track if initPlayer has been invoked
 
   @override
   void initState() {
     super.initState();
     // Initialize solo states and track volumes based on _audioTracks
+
     for (String track in _audioTracks) {
       downloadAndSaveFile(
-              'https://github.com/naonvl/vespa-configurator-playcanvas/blob/main/' +
-                  track +
-                  '.mp3',
-              track + '.mp3')
-          .then((path) {
+        'https://github.com/naonvl/vespa-configurator-playcanvas/blob/main/' +
+            track +
+            '.mp3',
+        track + '.mp3',
+      ).then((path) {
         _audioPaths.add(path);
       });
+
       _soloStates[track] = false;
       _tempTrackVolumes[track] = 1.0;
       _trackVolumes[track] = 1.0;
+
+      if (!isInitPlayerInvoked) {
+        _methodChannel.invokeMethod("initPlayer", {"audioTracks": _audioTracks});
+        isInitPlayerInvoked = true; // Set the flag to true after invoking initPlayer
+      }
     }
-    _methodChannel
-        .invokeMethod("initPlayer", {"audioTracks": _audioTracks});
   }
 
+
   Future<String> downloadAndSaveFile(String url, String filename) async {
-    Directory dir = await getApplicationSupportDirectory();
-    String path = '${dir.path}/$filename';
+    Directory? dir = await getExternalStorageDirectory();
+    String path = '${dir?.path}/$filename';
     File file = File(path);
 
     if (await file.exists()) {
