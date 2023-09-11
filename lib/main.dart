@@ -56,14 +56,12 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _isFirstPlaying = false;
       });
-    } 
-/* 	else if (!_isFirstPlaying && !_isPlaying) {
+    } else if (!_isFirstPlaying && !_isPlaying) {
       _methodChannel.invokeMethod("resumeSound");
     } else if (!_isFirstPlaying && _isPlaying) {
       _methodChannel.invokeMethod("pauseSound");
-    }  */
-	else {
-      _methodChannel.invokeMethod("playSound");
+    } else {
+      _methodChannel.invokeMethod("stopSound");
     }
     setState(() {
       _isPlaying = !_isPlaying;
